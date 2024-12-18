@@ -12,19 +12,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateTask = exports.DeleteTask = exports.CreateTask = void 0;
+exports.getAllTasks = exports.UpdateTask = exports.DeleteTask = exports.CreateTask = void 0;
 const task_models_js_1 = __importDefault(require("../Models/task.models.js"));
 const CreateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
     try {
         const task = yield task_models_js_1.default.create({
-            title: title,
-            description: description
+            title,
+            description,
         });
-        return res.status(200).json({ msg: "Task Created Successfully!", Task: task });
+        if (!task) {
+            res.status(404).json({
+                msg: 'Task not found!',
+            });
+            return;
+        }
+        res.status(201).json({
+            msg: 'Task Created Successfully!',
+            task,
+        });
     }
     catch (error) {
-        return res.status(201).json({ msg: "Something Went Wrong while creating task!" });
+        console.error('Error creating task:', error); // Log the error for debugging
+        res.status(500).json({
+            msg: 'Something went wrong while creating the task!'
+        });
     }
 });
 exports.CreateTask = CreateTask;
@@ -32,10 +44,21 @@ const DeleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { TaskId } = req.params;
     try {
         const task = yield task_models_js_1.default.findByIdAndDelete(TaskId);
-        return res.status(200).json({ msg: "Task deleted Successfully!" });
+        if (!task) {
+            res.status(404).json({
+                msg: 'Task not found!',
+            });
+            return;
+        }
+        res.status(200).json({
+            msg: 'Task deleted successfully!',
+        });
     }
     catch (error) {
-        return res.status(201).json({ msg: "Something Went Wrong while  deleting task!" });
+        console.error('Error deleting task:', error); // Log the error for debugging
+        res.status(500).json({
+            msg: 'Something went wrong while deleting the task!'
+        });
     }
 });
 exports.DeleteTask = DeleteTask;
@@ -43,14 +66,46 @@ const UpdateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { title, description } = req.body;
     const { TaskId } = req.params;
     try {
-        const task = yield task_models_js_1.default.findByIdAndUpdate(TaskId, {
-            title: title,
-            description: description
+        const task = yield task_models_js_1.default.findByIdAndUpdate(TaskId, { title, description }, { new: true } // This ensures the updated document is returned
+        );
+        if (!task) {
+            res.status(404).json({
+                msg: 'Task not found!',
+            });
+            return;
+        }
+        res.status(200).json({
+            msg: 'Task updated successfully!',
+            task, // Return the updated task
         });
-        return res.status(200).json({ msg: "Task Updated Successfully!" });
     }
     catch (error) {
-        return res.status(201).json({ msg: "Something Went Wrong while updating task !" });
+        console.error('Error updating task:', error); // Log the error for debugging
+        res.status(500).json({
+            msg: 'Something went wrong while updating the task!'
+        });
     }
 });
 exports.UpdateTask = UpdateTask;
+const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const allTasks = yield task_models_js_1.default.find({});
+        if (!allTasks || allTasks.length === 0) {
+            res.status(404).json({
+                msg: 'No tasks found!',
+            });
+            return;
+        }
+        res.status(200).json({
+            msg: 'All tasks fetched successfully!',
+            data: allTasks,
+        });
+    }
+    catch (error) {
+        console.error('Error fetching tasks:', error); // Log the error for debugging
+        res.status(500).json({
+            msg: 'Something went wrong while fetching tasks!'
+        });
+    }
+});
+exports.getAllTasks = getAllTasks;
