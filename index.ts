@@ -1,10 +1,17 @@
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
 import { Express,Request,Response } from "express";
 import express from "express"
-
+import  connectDB  from './DataBase/connection' 
 const port : number = 3000
 
 const app:Express = express()
 
+
+connectDB()
 
 app.get('/',(req:Request,res:Response)=>{
     res.send('<h1>Hello World!<h1>')
