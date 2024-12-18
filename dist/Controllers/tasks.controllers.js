@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateTask = void 0;
+exports.UpdateTask = exports.DeleteTask = exports.CreateTask = void 0;
 const task_models_js_1 = __importDefault(require("../Models/task.models.js"));
 const CreateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
@@ -24,6 +24,33 @@ const CreateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(200).json({ msg: "Task Created Successfully!", Task: task });
     }
     catch (error) {
+        return res.status(201).json({ msg: "Something Went Wrong while creating task!" });
     }
 });
 exports.CreateTask = CreateTask;
+const DeleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { TaskId } = req.params;
+    try {
+        const task = yield task_models_js_1.default.findByIdAndDelete(TaskId);
+        return res.status(200).json({ msg: "Task deleted Successfully!" });
+    }
+    catch (error) {
+        return res.status(201).json({ msg: "Something Went Wrong while  deleting task!" });
+    }
+});
+exports.DeleteTask = DeleteTask;
+const UpdateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, description } = req.body;
+    const { TaskId } = req.params;
+    try {
+        const task = yield task_models_js_1.default.findByIdAndUpdate(TaskId, {
+            title: title,
+            description: description
+        });
+        return res.status(200).json({ msg: "Task Updated Successfully!" });
+    }
+    catch (error) {
+        return res.status(201).json({ msg: "Something Went Wrong while updating task !" });
+    }
+});
+exports.UpdateTask = UpdateTask;
