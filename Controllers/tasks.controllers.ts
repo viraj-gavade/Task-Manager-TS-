@@ -23,10 +23,7 @@ export const CreateTask = async (req: IRequest, res: Response): Promise<void> =>
        });
        return;
      }
-     res.status(201).json({
-      msg: 'Task Created Successfully!',
-      task,
-    });
+     res.redirect('/api/v1/tasks')
   } catch (error) {
     console.error('Error creating task:', error); // Log the error for debugging
      res.status(500).json({
@@ -46,9 +43,7 @@ export const DeleteTask = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-     res.status(200).json({
-      msg: 'Task deleted successfully!',
-    });
+    res.redirect('/api/v1/tasks')
   } catch (error) {
     console.error('Error deleting task:', error); // Log the error for debugging
      res.status(500).json({
@@ -73,10 +68,8 @@ export const UpdateTask = async (req: IRequest, res: Response): Promise<void> =>
       return ;
     }
 
-     res.status(200).json({
-      msg: 'Task updated successfully!',
-      task, // Return the updated task
-    });
+    res.redirect('/api/v1/tasks')
+
   } catch (error) {
     console.error('Error updating task:', error); // Log the error for debugging
      res.status(500).json({
@@ -95,10 +88,9 @@ export const getAllTasks = async (req: Request, res: Response): Promise<void> =>
       return
     }
 
-     res.status(200).json({
-      msg: 'All tasks fetched successfully!',
-      data: allTasks,
-    });
+     res.render('index',{
+      tasks:allTasks
+     })
   } catch (error) {
     console.error('Error fetching tasks:', error); // Log the error for debugging
      res.status(500).json({

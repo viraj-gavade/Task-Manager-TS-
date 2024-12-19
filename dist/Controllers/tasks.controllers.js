@@ -27,10 +27,7 @@ const CreateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             });
             return;
         }
-        res.status(201).json({
-            msg: 'Task Created Successfully!',
-            task,
-        });
+        res.redirect('/api/v1/tasks');
     }
     catch (error) {
         console.error('Error creating task:', error); // Log the error for debugging
@@ -50,9 +47,7 @@ const DeleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             });
             return;
         }
-        res.status(200).json({
-            msg: 'Task deleted successfully!',
-        });
+        res.redirect('/api/v1/tasks');
     }
     catch (error) {
         console.error('Error deleting task:', error); // Log the error for debugging
@@ -74,10 +69,7 @@ const UpdateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             });
             return;
         }
-        res.status(200).json({
-            msg: 'Task updated successfully!',
-            task, // Return the updated task
-        });
+        res.redirect('/api/v1/tasks');
     }
     catch (error) {
         console.error('Error updating task:', error); // Log the error for debugging
@@ -96,9 +88,8 @@ const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             });
             return;
         }
-        res.status(200).json({
-            msg: 'All tasks fetched successfully!',
-            data: allTasks,
+        res.render('index', {
+            tasks: allTasks
         });
     }
     catch (error) {
