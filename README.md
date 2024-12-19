@@ -2,6 +2,10 @@
 
 This project is a simple CRUD (Create, Read, Update, Delete) API built with TypeScript, Express, and MongoDB. It demonstrates how to set up a basic backend application using TypeScript while adhering to clean code practices.
 
+## 🌐 Live Demo
+
+**[View Live Application](https://taskmanagertypescript-m3q18mq6.b4a.run/api/v1/tasks)**
+
 ## Table of Contents
 - [Getting Started](#getting-started)
 - [Features](#features)
