@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-
+import path from 'path'
 // Load environment variables from .env file
 dotenv.config();
 
@@ -10,6 +10,10 @@ import TaskRouter from "./Routes/tasks.routers";
 const port : number = 3000
 const app:Express = express()
 
+app.set('view engine', 'ejs');
+
+// Set the views directory
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 
 // Middleware to parse URL-encoded bodies
@@ -23,7 +27,7 @@ app.get('/',(req:Request,res:Response)=>{
 
 app.use('/api/v1/',TaskRouter)
 app.get('/home',(req:Request,res:Response)=>{
-    res.send('This is the home page')
+    res.render('index.ejs')
 })
 
 
