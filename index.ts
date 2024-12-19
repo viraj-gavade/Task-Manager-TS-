@@ -5,8 +5,8 @@ dotenv.config();
 
 import { Express,Request,Response } from "express";
 import express from "express"
-import  connectDB  from './DataBase/connection' 
-import TaskRouter from "./Routes/tasks.routers";
+import  connectDB  from './src/DataBase/connection' 
+import TaskRouter from "./src/Routes/tasks.routers";
 const port : number = 3000
 const app:Express = express()
 

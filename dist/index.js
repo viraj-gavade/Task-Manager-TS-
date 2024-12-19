@@ -8,8 +8,8 @@ const path_1 = __importDefault(require("path"));
 // Load environment variables from .env file
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
-const connection_1 = __importDefault(require("./DataBase/connection"));
-const tasks_routers_1 = __importDefault(require("./Routes/tasks.routers"));
+const connection_1 = __importDefault(require("./src/DataBase/connection"));
+const tasks_routers_1 = __importDefault(require("./src/Routes/tasks.routers"));
 const port = 3000;
 const app = (0, express_1.default)();
 app.set('view engine', 'ejs');
