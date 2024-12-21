@@ -10,6 +10,7 @@ dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const connection_1 = __importDefault(require("./src/DataBase/connection"));
 const tasks_routers_1 = __importDefault(require("./src/Routes/tasks.routers"));
+const user_routers_1 = __importDefault(require("./src/Routes/user.routers"));
 const port = 3000;
 const app = (0, express_1.default)();
 app.set('view engine', 'ejs');
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World!<h1>');
 });
 app.use('/api/v1/', tasks_routers_1.default);
+app.use('/api/v1/users', user_routers_1.default);
 app.get('/home', (req, res) => {
     res.render('index.ejs');
 });
