@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World!<h1>');
 });
 app.use('/api/v1/', tasks_routers_1.default);
-app.use('/api/v1/users', user_routers_1.default);
+app.use('/api/v1/auth/user', user_routers_1.default);
 app.get('/home', (req, res) => {
     res.render('index.ejs');
 });

@@ -29,7 +29,7 @@ app.get('/',(req:Request,res:Response)=>{
 })
 
 app.use('/api/v1/',TaskRouter)
-app.use('/api/v1/users',UserRouter)
+app.use('/api/v1/auth/user',UserRouter)
 
 app.get('/home',(req:Request,res:Response)=>{
     res.render('index.ejs')
