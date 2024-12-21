@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Task from '../Models/task.models.js';
+import UserTask from '../Models/task.models.js';
 
 // Extend the Express Request interface to include custom properties
 export interface IRequest extends Request {
@@ -18,7 +18,7 @@ export const CreateTask = async (req: IRequest, res: Response): Promise<void> =>
   const { title, description } = req.body; // Extract title and description from request body
   console.log('Task creation endpoint called!');
   try {
-    const task = await Task.create({
+    const task = await UserTask.create({
       title, // Task title
       description, // Task description
       createdBy: req.user // Associate task with the authenticated user
@@ -44,7 +44,7 @@ export const CreateTask = async (req: IRequest, res: Response): Promise<void> =>
 export const DeleteTask = async (req: Request, res: Response): Promise<void> => {
   const { TaskId } = req.params; // Extract task ID from request parameters
   try {
-    const task = await Task.findByIdAndDelete(TaskId); // Find and delete task by ID
+    const task = await UserTask.findByIdAndDelete(TaskId); // Find and delete task by ID
     if (!task) {
       res.status(404).json({
         msg: 'Task not found!', // Response if task does not exist
@@ -66,7 +66,7 @@ export const UpdateTask = async (req: IRequest, res: Response): Promise<void> =>
   const { title, description } = req.body; // Extract updated task details from request body
   const { TaskId } = req.params; // Extract task ID from request parameters
   try {
-    const task = await Task.findByIdAndUpdate(
+    const task = await UserTask.findByIdAndUpdate(
       TaskId, // Task ID to update
       { title, description }, // New task details
       { new: true } // Ensure the updated document is returned
@@ -93,7 +93,7 @@ export const getAllTasks = async (req: IRequest, res: Response): Promise<void> =
     console.log(req.user); // Log user details for debugging
     const userId = req?.user?._id ; // Extract user ID from request
     console.log('User ID:', userId); // Log user ID for debugging
-    const allTasks = await Task.find({ createdBy: userId }); // Fetch tasks created by the user
+    const allTasks = await UserTask.find({ createdBy: userId }); // Fetch tasks created by the user
     console.log('Number of tasks fetched:', allTasks.length); // Log the count of tasks fetched
 
     // Render the tasks view with user data and task list

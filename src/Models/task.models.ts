@@ -1,45 +1,41 @@
-import mongoose, { Document,Schema,Model,model, mongo } from "mongoose";
-import { title } from "process";
+import mongoose, { Document, Schema, model } from "mongoose";
 
-// Defining an interface for the Task document
-
+// Define an interface for the Task document
 interface Itask extends Document {
-    title:string
-    isCompleted : boolean
-    description : string
-    createdBy?: mongoose.Types.ObjectId;
+    title: string; // The title of the task
+    isCompleted: boolean; // Status of the task (completed or not)
+    description: string; // Detailed description of the task
+    createdBy?: mongoose.Types.ObjectId; // Reference to the User who created the task
 }
 
-
-// Defining the schema for Task
+// Define the schema for Task
 const taskSchema: Schema<Itask> = new Schema(
     {
         title: {
-            type: String,
-            required: true,
-            trim: true,
+            type: String, // The title must be a string
+            required: true, // This field is mandatory
+            trim: true, // Removes whitespace from both ends of the string
         },
         description: {
-            type: String,
-            required: true,
-            trim: true,
+            type: String, // The description must be a string
+            required: true, // This field is mandatory
+            trim: true, // Removes whitespace from both ends of the string
         },
         isCompleted: {
-            type: Boolean,
-            default: false,
+            type: Boolean, // The status must be a boolean value
+            default: false, // Defaults to `false` (not completed)
         },
-        createdBy : {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:'User'
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId, // A reference to the User model
+            ref: 'User', // Points to the User collection in the database
         }
-        
     },
     {
-        timestamps: true, // Automatically adds `createdAt` and `updatedAt`
+        timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
     }
 );
 
-// Creating the Task model using the schema and interface
+// Create the Task model using the schema and interface
 const Task = model<Itask>('Task', taskSchema);
 
 export default Task;

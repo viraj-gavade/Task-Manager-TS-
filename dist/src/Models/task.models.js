@@ -34,29 +34,29 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-// Defining the schema for Task
+// Define the schema for Task
 const taskSchema = new mongoose_1.Schema({
     title: {
-        type: String,
-        required: true,
-        trim: true,
+        type: String, // The title must be a string
+        required: true, // This field is mandatory
+        trim: true, // Removes whitespace from both ends of the string
     },
     description: {
-        type: String,
-        required: true,
-        trim: true,
+        type: String, // The description must be a string
+        required: true, // This field is mandatory
+        trim: true, // Removes whitespace from both ends of the string
     },
     isCompleted: {
-        type: Boolean,
-        default: false,
+        type: Boolean, // The status must be a boolean value
+        default: false, // Defaults to `false` (not completed)
     },
     createdBy: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User'
+        type: mongoose_1.default.Schema.Types.ObjectId, // A reference to the User model
+        ref: 'User', // Points to the User collection in the database
     }
 }, {
-    timestamps: true, // Automatically adds `createdAt` and `updatedAt`
+    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
 });
-// Creating the Task model using the schema and interface
+// Create the Task model using the schema and interface
 const Task = (0, mongoose_1.model)('Task', taskSchema);
 exports.default = Task;
