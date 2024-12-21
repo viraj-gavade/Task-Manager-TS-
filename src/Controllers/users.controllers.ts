@@ -30,16 +30,24 @@ interface User {
    
     if(!SearchUser){
         res.status(200).json({
-            msg:`There is no such user with`
+            msg:`There is no such user!`
         })
+        return
+    }
+
+    const isPasswordCorrect  = await SearchUser.ComparePassword(password)
+    if(isPasswordCorrect===false){
+        res.status(200).json({
+            msg:`Incorrect Password`,
+            User:SearchUser
+        })
+        return
     }
     res.status(200).json({
-        msg:`There is no such user with`,
+        msg:`User Logged In!`,
         User:SearchUser
     })
-
     
-    res.send('This is the sign in user controller')
 }
 
 

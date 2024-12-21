@@ -58,7 +58,6 @@ UserSchema.methods.HashPassword = function (Userpassword) {
 UserSchema.methods.ComparePassword = function (Userpassword) {
     return __awaiter(this, void 0, void 0, function* () {
         const isPasswordCorrect = yield bcryptjs_1.default.compare(Userpassword, this.password);
-        console.log('User Hashed Password', isPasswordCorrect);
         return isPasswordCorrect;
     });
 };

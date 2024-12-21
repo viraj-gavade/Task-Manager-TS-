@@ -54,7 +54,7 @@ UserSchema.pre<User>('save', async function (next) {
     UserSchema.methods.HashPassword = async function (Userpassword:string):Promise<string> {
         
         const salt = await bcryptjs.genSalt(16) 
-        const HashPassword:string = await bcryptjs.hash(Userpassword,salt)
+        const HashPassword = await bcryptjs.hash(Userpassword,salt)
         console.log('User Hashed Password',HashPassword)
         return HashPassword
         
@@ -62,7 +62,6 @@ UserSchema.pre<User>('save', async function (next) {
     
     UserSchema.methods.ComparePassword = async function (Userpassword:string):Promise<Boolean> {
         const isPasswordCorrect:Boolean = await bcryptjs.compare(Userpassword,this.password)
-        console.log('User Hashed Password',isPasswordCorrect)
         return isPasswordCorrect
         
     }
