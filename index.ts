@@ -8,6 +8,7 @@ import express from "express"
 import  connectDB  from './src/DataBase/connection' 
 import TaskRouter from "./src/Routes/tasks.routers";
 import UserRouter from "./src/Routes/user.routers";
+import cookieParser from "cookie-parser";
 const port : number = 3000
 const app:Express = express()
 
@@ -16,6 +17,7 @@ app.set('view engine', 'ejs');
 // Set the views directory
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
+app.use(cookieParser())
 
 // Middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));

@@ -1,12 +1,15 @@
 import { Request, Response } from 'express';
 import Task from '../Models/task.models.js';
 
-interface IRequest extends Request {
+export interface IRequest extends Request {
   body: {
     title: string;
     description: string;
     completed?: boolean; // Optional field
-  };
+  },
+  user?:{
+    _id : any
+  }
 }
 
 export const CreateTask = async (req: IRequest, res: Response): Promise<void> => {
@@ -15,6 +18,7 @@ export const CreateTask = async (req: IRequest, res: Response): Promise<void> =>
     const task = await Task.create({
       title,
       description,
+      createdBy:req.user
     });
 
     if (!task) {
@@ -78,9 +82,11 @@ export const UpdateTask = async (req: IRequest, res: Response): Promise<void> =>
   }
 };
 
-export const getAllTasks = async (req: Request, res: Response): Promise<void> => {
+export const getAllTasks = async (req: IRequest, res: Response): Promise<void> => {
   try {
-    const allTasks = await Task.find({});
+    console.log(req.user)
+    const { userId } = req.user._id
+    const allTasks = await Task.find({ createdBy:userId});
     if (!allTasks || allTasks.length === 0) {
        res.status(404).json({
         msg: 'No tasks found!',

@@ -1,4 +1,4 @@
-import { Document,Schema,Model,model } from "mongoose";
+import mongoose, { Document,Schema,Model,model, mongo } from "mongoose";
 import { title } from "process";
 
 // Defining an interface for the Task document
@@ -7,6 +7,7 @@ interface Itask extends Document {
     title:string
     isCompleted : boolean
     description : string
+    createdBy?: mongoose.Types.ObjectId;
 }
 
 
@@ -27,6 +28,10 @@ const taskSchema: Schema<Itask> = new Schema(
             type: Boolean,
             default: false,
         },
+        createdBy : {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'User'
+        }
         
     },
     {

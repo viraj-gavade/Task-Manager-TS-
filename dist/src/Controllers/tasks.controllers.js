@@ -20,6 +20,7 @@ const CreateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const task = yield task_models_js_1.default.create({
             title,
             description,
+            createdBy: req.user
         });
         if (!task) {
             res.status(404).json({
@@ -81,7 +82,9 @@ const UpdateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.UpdateTask = UpdateTask;
 const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const allTasks = yield task_models_js_1.default.find({});
+        console.log(req.user);
+        const { userId } = req.user._id;
+        const allTasks = yield task_models_js_1.default.find({ createdBy: userId });
         if (!allTasks || allTasks.length === 0) {
             res.status(404).json({
                 msg: 'No tasks found!',
