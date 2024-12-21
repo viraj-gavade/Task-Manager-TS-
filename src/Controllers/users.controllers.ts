@@ -60,11 +60,7 @@ export const SignInUser = async (req: IRequest, res: Response): Promise<void> =>
         );
 
         // Send success response with user data and token
-        res.status(200).cookie('refreshtoken',token).json({
-            msg: "User logged in successfully!",
-            user,
-            token
-        });
+        res.status(200).cookie('refreshtoken',token).redirect('/api/v1/tasks')
     } catch (error) {
         // Handle any server errors
         console.error("SignInUser Error:", error);
@@ -80,10 +76,7 @@ export const SignInUser = async (req: IRequest, res: Response): Promise<void> =>
 
 export const SignOutUser = async (req:IRequest,res:Response):Promise<void>=> {
 
-    res.status(200).clearCookie('refreshtoken').json({
-        msg:"USER SIGN OUT SUCCESSFULLY"
-    })
-    return
+    res.status(200).clearCookie('refreshtoken').redirect('/api/v1/auth/user/signin')
 
 }
 
@@ -133,11 +126,6 @@ export const SignUpUser = async (req:IRequest,res:Response):Promise<void>=> {
     )
     return 
    }
-   res.status(200).json(
-    {
-        msg:" User created successfully!",
-        data : CheckUser
-    }
-)
+   res.status(200).redirect('/api/v1/auth/user/signin')
 
 }

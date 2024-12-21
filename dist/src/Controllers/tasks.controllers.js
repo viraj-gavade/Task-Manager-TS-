@@ -16,12 +16,14 @@ exports.getAllTasks = exports.UpdateTask = exports.DeleteTask = exports.CreateTa
 const task_models_js_1 = __importDefault(require("../Models/task.models.js"));
 const CreateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
+    console.log('Here called !');
     try {
         const task = yield task_models_js_1.default.create({
             title,
             description,
             createdBy: req.user
         });
+        console.log(task);
         if (!task) {
             res.status(404).json({
                 msg: 'Task not found!',
@@ -83,16 +85,20 @@ exports.UpdateTask = UpdateTask;
 const getAllTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(req.user);
-        const { userId } = req.user._id;
+        const userId = req.user._id;
+        console.log("userid", userId);
         const allTasks = yield task_models_js_1.default.find({ createdBy: userId });
+        console.log(allTasks.length);
         if (!allTasks || allTasks.length === 0) {
-            res.status(404).json({
-                msg: 'No tasks found!',
+            res.render('index', {
+                tasks: allTasks,
+                user: req.user
             });
             return;
         }
         res.render('index', {
-            tasks: allTasks
+            tasks: allTasks,
+            user: req.user
         });
     }
     catch (error) {

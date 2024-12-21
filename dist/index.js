@@ -12,6 +12,7 @@ const connection_1 = __importDefault(require("./src/DataBase/connection"));
 const tasks_routers_1 = __importDefault(require("./src/Routes/tasks.routers"));
 const user_routers_1 = __importDefault(require("./src/Routes/user.routers"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 const port = 3000;
 const app = (0, express_1.default)();
 app.set('view engine', 'ejs');
@@ -19,6 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', path_1.default.join(__dirname, 'views'));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)());
 // Middleware to parse URL-encoded bodies
 app.use(express_1.default.urlencoded({ extended: true }));
 (0, connection_1.default)();

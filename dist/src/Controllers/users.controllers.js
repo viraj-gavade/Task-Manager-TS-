@@ -44,11 +44,7 @@ const SignInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         // Generate a JWT token
         const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRETE || "default_secret", { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1h" });
         // Send success response with user data and token
-        res.status(200).cookie('refreshtoken', token).json({
-            msg: "User logged in successfully!",
-            user,
-            token
-        });
+        res.status(200).cookie('refreshtoken', token).redirect('/api/v1/tasks');
     }
     catch (error) {
         // Handle any server errors
@@ -60,10 +56,7 @@ const SignInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.SignInUser = SignInUser;
 const SignOutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).clearCookie('refreshtoken').json({
-        msg: "USER SIGN OUT SUCCESSFULLY"
-    });
-    return;
+    res.status(200).clearCookie('refreshtoken').redirect('/api/v1/auth/user/signin');
 });
 exports.SignOutUser = SignOutUser;
 const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -96,9 +89,6 @@ const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
         return;
     }
-    res.status(200).json({
-        msg: " User created successfully!",
-        data: CheckUser
-    });
+    res.status(200).redirect('/api/v1/auth/user/signin');
 });
 exports.SignUpUser = SignUpUser;

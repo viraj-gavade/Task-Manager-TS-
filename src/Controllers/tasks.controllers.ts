@@ -14,6 +14,7 @@ export interface IRequest extends Request {
 
 export const CreateTask = async (req: IRequest, res: Response): Promise<void> => {
   const { title, description } = req.body;
+  console.log('Here called !')
   try {
     const task = await Task.create({
       title,
@@ -21,6 +22,7 @@ export const CreateTask = async (req: IRequest, res: Response): Promise<void> =>
       createdBy:req.user
     });
 
+    console.log(task)
     if (!task) {
         res.status(404).json({
          msg: 'Task not found!',
@@ -85,17 +87,21 @@ export const UpdateTask = async (req: IRequest, res: Response): Promise<void> =>
 export const getAllTasks = async (req: IRequest, res: Response): Promise<void> => {
   try {
     console.log(req.user)
-    const { userId } = req.user._id
+    const  userId  = req.user._id
+    console.log("userid",userId)
     const allTasks = await Task.find({ createdBy:userId});
+    console.log(allTasks.length)
     if (!allTasks || allTasks.length === 0) {
-       res.status(404).json({
-        msg: 'No tasks found!',
-      });
+      res.render('index',{
+        tasks:allTasks,
+        user:req.user
+       })
       return
     }
 
      res.render('index',{
-      tasks:allTasks
+      tasks:allTasks,
+      user:req.user
      })
   } catch (error) {
     console.error('Error fetching tasks:', error); // Log the error for debugging
