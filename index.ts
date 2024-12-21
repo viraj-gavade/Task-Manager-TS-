@@ -35,13 +35,15 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // Root route for testing the server, responds with a simple message
-app.get('/', (req: Request, res: Response) => {
-    res.send('<h1>Hello World!<h1>');
-});
+
 
 // Setting up the routes for tasks and user management
 app.use('/api/v1/', TaskRouter);  // Task routes
 app.use('/api/v1/auth/user', UserRouter);  // User authentication routes
+app.use('/home', (req:Request,res:Response)=>{
+    res.send(`<a href="/api/v1/tasks"><h1>Navigate To Home Page</h1></a>`)
+}); 
+
 
 
 // Starting the server and listening on the specified port

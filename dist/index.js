@@ -29,12 +29,12 @@ app.use(express_1.default.urlencoded({ extended: true }));
 // Establish database connection
 (0, connection_1.default)();
 // Root route for testing the server, responds with a simple message
-app.get('/', (req, res) => {
-    res.send('<h1>Hello World!<h1>');
-});
 // Setting up the routes for tasks and user management
 app.use('/api/v1/', tasks_routers_1.default); // Task routes
 app.use('/api/v1/auth/user', user_routers_1.default); // User authentication routes
+app.use('/home', (req, res) => {
+    res.send(`<a href="/api/v1/tasks"><h1>Navigate To Home Page</h1></a>`);
+});
 // Starting the server and listening on the specified port
 app.listen(port, () => {
     console.log("Server is listening on port:-", port); // Log when the server starts
