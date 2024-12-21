@@ -35,10 +35,6 @@ app.get('/', (req, res) => {
 // Setting up the routes for tasks and user management
 app.use('/api/v1/', tasks_routers_1.default); // Task routes
 app.use('/api/v1/auth/user', user_routers_1.default); // User authentication routes
-// Route to render the home page (index.ejs)
-app.get('/home', (req, res) => {
-    res.render('index.ejs'); // Render the 'index.ejs' page
-});
 // Starting the server and listening on the specified port
 app.listen(port, () => {
     console.log("Server is listening on port:-", port); // Log when the server starts

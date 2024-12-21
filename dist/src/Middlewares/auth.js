@@ -25,7 +25,7 @@ const VerifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.refreshtoken;
         if (!token) {
             // If no token is provided, respond with an unauthorized error
-            res.status(401).json({ msg: "Token Not Provided!" });
+            res.status(200).redirect('/api/v1/auth/user/signin');
             return;
         }
         let decoded_token;
@@ -36,7 +36,7 @@ const VerifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         catch (err) {
             // Handle token verification errors
             console.error("Token verification error:", err);
-            res.status(401).json({ msg: "Invalid or Expired Token!" });
+            res.status(200).redirect('/api/v1/auth/user/signin');
             return;
         }
         // Check if the decoded token contains a valid user ID
@@ -48,7 +48,7 @@ const VerifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const user = yield users_models_1.default.findById(decoded_token._id);
         if (!user) {
             // If no user is found, respond with a forbidden error
-            res.status(403).json({ msg: "Invalid Access!" });
+            res.status(200).redirect('/api/v1/auth/user/signin');
             return;
         }
         // Attach the authenticated user's details to the request object

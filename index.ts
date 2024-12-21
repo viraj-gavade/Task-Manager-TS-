@@ -43,10 +43,6 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/v1/', TaskRouter);  // Task routes
 app.use('/api/v1/auth/user', UserRouter);  // User authentication routes
 
-// Route to render the home page (index.ejs)
-app.get('/home', (req: Request, res: Response) => {
-    res.render('index.ejs'); // Render the 'index.ejs' page
-});
 
 // Starting the server and listening on the specified port
 app.listen(port, () => {

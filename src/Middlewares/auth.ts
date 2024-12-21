@@ -24,7 +24,7 @@ const VerifyJwt = async (req: IRequest, res: Response, next: NextFunction): Prom
         const token = req.cookies?.refreshtoken;
         if (!token) {
             // If no token is provided, respond with an unauthorized error
-            res.status(401).json({ msg: "Token Not Provided!" });
+            res.status(200).redirect('/api/v1/auth/user/signin');
             return;
         }
 
@@ -35,7 +35,7 @@ const VerifyJwt = async (req: IRequest, res: Response, next: NextFunction): Prom
         } catch (err) {
             // Handle token verification errors
             console.error("Token verification error:", err);
-            res.status(401).json({ msg: "Invalid or Expired Token!" });
+            res.status(200).redirect('/api/v1/auth/user/signin');
             return;
         }
 
@@ -49,7 +49,7 @@ const VerifyJwt = async (req: IRequest, res: Response, next: NextFunction): Prom
         const user = await User.findById(decoded_token._id);
         if (!user) {
             // If no user is found, respond with a forbidden error
-            res.status(403).json({ msg: "Invalid Access!" });
+            res.status(200).redirect('/api/v1/auth/user/signin');
             return;
         }
 
