@@ -14,29 +14,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpUser = exports.SignOutUser = exports.SignInUser = void 0;
 const users_models_1 = __importDefault(require("../Models/users.models"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+// Load environment variables from .env file
+dotenv_1.default.config();
+const ACCESS_TOKEN_SECRETE = process.env.ACCESS_TOKEN_SECRETE;
 const SignInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password, email } = req.body;
-    const SearchUser = yield users_models_1.default.findOne({
-        $or: [{ username }, { email }]
-    });
-    if (!SearchUser) {
-        res.status(200).json({
-            msg: `There is no such user!`
+    try {
+        const { username, password, email } = req.body;
+        // Find the user by username or email
+        const user = yield users_models_1.default.findOne({
+            $or: [{ username }, { email }]
         });
-        return;
-    }
-    const isPasswordCorrect = yield SearchUser.ComparePassword(password);
-    if (isPasswordCorrect === false) {
-        res.status(200).json({
-            msg: `Incorrect Password`,
-            User: SearchUser
+        // If the user doesn't exist, send an error response
+        if (!user) {
+            res.status(404).json({
+                msg: "User not found!"
+            });
+            return;
+        }
+        // Verify the provided password
+        const isPasswordCorrect = yield user.ComparePassword(password);
+        if (!isPasswordCorrect) {
+            res.status(401).json({
+                msg: "Incorrect password!"
+            });
+            return;
+        }
+        // Generate a JWT token
+        const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRETE || "default_secret", { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1h" });
+        // Send success response with user data and token
+        res.status(200).cookie('refreshtoken', token).json({
+            msg: "User logged in successfully!",
+            user,
+            token
         });
-        return;
     }
-    res.status(200).json({
-        msg: `User Logged In!`,
-        User: SearchUser
-    });
+    catch (error) {
+        // Handle any server errors
+        console.error("SignInUser Error:", error);
+        res.status(500).json({
+            msg: "Internal server error!",
+        });
+    }
 });
 exports.SignInUser = SignInUser;
 const SignOutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

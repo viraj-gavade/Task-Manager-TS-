@@ -1,6 +1,12 @@
 import { strict } from 'assert'
 import User from '../Models/users.models'
 import { Request,Response } from 'express'
+import jwt from 'jsonwebtoken'
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+const ACCESS_TOKEN_SECRETE = process.env.ACCESS_TOKEN_SECRETE as string;
 
 interface IRequest extends Request{
     body:{
@@ -20,35 +26,55 @@ interface User {
     fullName:string
 }
 
- export const SignInUser = async (req:IRequest,res:Response):Promise<void>=> {
+export const SignInUser = async (req: IRequest, res: Response): Promise<void> => {
+    try {
+        const { username, password, email } = req.body;
 
-    const { username , password , email } = req.body
-   
-    const SearchUser = await User.findOne({
-        $or:[{username},{email}]
-    })
-   
-    if(!SearchUser){
-        res.status(200).json({
-            msg:`There is no such user!`
-        })
-        return
-    }
+        // Find the user by username or email
+        const user = await User.findOne({
+            $or: [{ username }, { email }]
+        });
 
-    const isPasswordCorrect  = await SearchUser.ComparePassword(password)
-    if(isPasswordCorrect===false){
-        res.status(200).json({
-            msg:`Incorrect Password`,
-            User:SearchUser
-        })
-        return
+        // If the user doesn't exist, send an error response
+        if (!user) {
+             res.status(404).json({
+                msg: "User not found!"
+            });
+            return
+        }
+
+        // Verify the provided password
+        const isPasswordCorrect = await user.ComparePassword(password);
+        if (!isPasswordCorrect) {
+             res.status(401).json({
+                msg: "Incorrect password!"
+            });
+            return
+        }
+
+        // Generate a JWT token
+        const token = jwt.sign(
+            { _id: user._id },
+            process.env.ACCESS_TOKEN_SECRETE || "default_secret",
+            { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1h" }
+        );
+
+        // Send success response with user data and token
+        res.status(200).cookie('refreshtoken',token).json({
+            msg: "User logged in successfully!",
+            user,
+            token
+        });
+    } catch (error) {
+        // Handle any server errors
+        console.error("SignInUser Error:", error);
+        res.status(500).json({
+            msg: "Internal server error!",
+        });
     }
-    res.status(200).json({
-        msg:`User Logged In!`,
-        User:SearchUser
-    })
-    
-}
+};
+
+
 
 
 
@@ -113,6 +139,5 @@ export const SignUpUser = async (req:IRequest,res:Response):Promise<void>=> {
         data : CheckUser
     }
 )
-
 
 }

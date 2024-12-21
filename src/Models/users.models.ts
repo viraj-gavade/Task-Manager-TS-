@@ -65,6 +65,8 @@ UserSchema.pre<User>('save', async function (next) {
         return isPasswordCorrect
         
     }
+   
+    
     
 const UserModel = model<User>('User',UserSchema,) 
 export default UserModel;
