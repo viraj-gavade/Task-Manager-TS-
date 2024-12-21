@@ -1,112 +1,110 @@
 import { Request, Response } from 'express';
 import Task from '../Models/task.models.js';
 
+// Extend the Express Request interface to include custom properties
 export interface IRequest extends Request {
   body: {
-    title: string;
-    description: string;
-    completed?: boolean; // Optional field
+    title: string; // Task title
+    description: string; // Task description
+    completed?: boolean; // Optional field for task completion status
   },
-  user?:{
-    _id : any
+  user?: {
+    _id: any; // User ID from authentication middleware
   }
 }
 
+// Controller to handle task creation
 export const CreateTask = async (req: IRequest, res: Response): Promise<void> => {
-  const { title, description } = req.body;
-  console.log('Here called !')
+  const { title, description } = req.body; // Extract title and description from request body
+  console.log('Task creation endpoint called!');
   try {
     const task = await Task.create({
-      title,
-      description,
-      createdBy:req.user
+      title, // Task title
+      description, // Task description
+      createdBy: req.user // Associate task with the authenticated user
     });
 
-    console.log(task)
+    console.log(task); // Log the created task for debugging
     if (!task) {
-        res.status(404).json({
-         msg: 'Task not found!',
-       });
-       return;
-     }
-     res.redirect('/api/v1/tasks')
+      res.status(404).json({
+        msg: 'Task not found!', // Response when task creation fails
+      });
+      return;
+    }
+    res.redirect('/api/v1/tasks'); // Redirect to the tasks list
   } catch (error) {
-    console.error('Error creating task:', error); // Log the error for debugging
-     res.status(500).json({
-      msg: 'Something went wrong while creating the task!'
+    console.error('Error creating task:', error); // Log errors during task creation
+    res.status(500).json({
+      msg: 'Something went wrong while creating the task!', // Generic error response
     });
   }
 };
 
+// Controller to handle task deletion
 export const DeleteTask = async (req: Request, res: Response): Promise<void> => {
-  const { TaskId } = req.params;
+  const { TaskId } = req.params; // Extract task ID from request parameters
   try {
-    const task = await Task.findByIdAndDelete(TaskId);
+    const task = await Task.findByIdAndDelete(TaskId); // Find and delete task by ID
     if (!task) {
-       res.status(404).json({
-        msg: 'Task not found!',
+      res.status(404).json({
+        msg: 'Task not found!', // Response if task does not exist
       });
       return;
     }
 
-    res.redirect('/api/v1/tasks')
+    res.redirect('/api/v1/tasks'); // Redirect to the tasks list
   } catch (error) {
-    console.error('Error deleting task:', error); // Log the error for debugging
-     res.status(500).json({
-      msg: 'Something went wrong while deleting the task!'
+    console.error('Error deleting task:', error); // Log errors during task deletion
+    res.status(500).json({
+      msg: 'Something went wrong while deleting the task!', // Generic error response
     });
   }
 };
 
+// Controller to handle task updates
 export const UpdateTask = async (req: IRequest, res: Response): Promise<void> => {
-  const { title, description } = req.body;
-  const { TaskId } = req.params;
+  const { title, description } = req.body; // Extract updated task details from request body
+  const { TaskId } = req.params; // Extract task ID from request parameters
   try {
     const task = await Task.findByIdAndUpdate(
-      TaskId,
-      { title, description },
-      { new: true } // This ensures the updated document is returned
+      TaskId, // Task ID to update
+      { title, description }, // New task details
+      { new: true } // Ensure the updated document is returned
     );
     if (!task) {
-       res.status(404).json({
-        msg: 'Task not found!',
+      res.status(404).json({
+        msg: 'Task not found!', // Response if task does not exist
       });
-      return ;
+      return;
     }
 
-    res.redirect('/api/v1/tasks')
-
+    res.redirect('/api/v1/tasks'); // Redirect to the tasks list
   } catch (error) {
-    console.error('Error updating task:', error); // Log the error for debugging
-     res.status(500).json({
-      msg: 'Something went wrong while updating the task!'
+    console.error('Error updating task:', error); // Log errors during task update
+    res.status(500).json({
+      msg: 'Something went wrong while updating the task!', // Generic error response
     });
   }
 };
 
+// Controller to fetch all tasks for the authenticated user
 export const getAllTasks = async (req: IRequest, res: Response): Promise<void> => {
   try {
-    console.log(req.user)
-    const  userId  = req.user._id
-    console.log("userid",userId)
-    const allTasks = await Task.find({ createdBy:userId});
-    console.log(allTasks.length)
-    if (!allTasks || allTasks.length === 0) {
-      res.render('index',{
-        tasks:allTasks,
-        user:req.user
-       })
-      return
-    }
+    console.log(req.user); // Log user details for debugging
+    const userId = req?.user?._id ; // Extract user ID from request
+    console.log('User ID:', userId); // Log user ID for debugging
+    const allTasks = await Task.find({ createdBy: userId }); // Fetch tasks created by the user
+    console.log('Number of tasks fetched:', allTasks.length); // Log the count of tasks fetched
 
-     res.render('index',{
-      tasks:allTasks,
-      user:req.user
-     })
+    // Render the tasks view with user data and task list
+    res.render('index', {
+      tasks: allTasks,
+      user: req.user,
+    });
   } catch (error) {
-    console.error('Error fetching tasks:', error); // Log the error for debugging
-     res.status(500).json({
-      msg: 'Something went wrong while fetching tasks!'
+    console.error('Error fetching tasks:', error); // Log errors during task retrieval
+    res.status(500).json({
+      msg: 'Something went wrong while fetching tasks!', // Generic error response
     });
   }
 };
